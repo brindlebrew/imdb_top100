@@ -1,21 +1,38 @@
 from bs4 import BeautifulSoup
 import requests
-import re
-from time import sleep
-from datetime import datetime
 
-def getGoldPrice():
-    url = "http://www.imdb.com/search/name?gender=male,female&ref_=nv_cel_m_3"
-    req = requests.get(url)
-    soup = BeautifulSoup(req.text, "lxml")
-    js_text = soup.find_all('script', type="text/javascript")[10]
-    js_text = js_text.string
-    regex = re.compile('"ask":{"css":"minus","price":"(.*)","performance":-1}},"G')
-    price = re.findall(regex, js_text)
-    return price
+r = requests.get('http://www.imdb.com/search/name?gender=male,female&ref_=nv_cel_m_3')
+soup = BeautifulSoup(r.text, 'lxml')
 
-with open("person.out","w") as f:
-    for x in range(0,10):
-        sNow = datetime.now().strftime("%I:%M:%S%p")
-        f.write("{0}, {1} \n ".format(sNow, getGoldPrice()))
-        sleep(59)
+actress = soup.find_all("div", class_="lister-item-content")
+# print(actress[0])
+
+# Used to test the actual text being derived for a field
+print(actress[0].find("p", "text-muted").get_text(strip = True))
+print(actress[0].find("p", "text-muted").string())
+
+
+top100 = {}
+for element in actress:
+    top100[element.find("a").get_text(strip = True)] = {}
+
+for element in actress:
+    name = element.find("a").get_text(strip = True)
+    top100[element.find("a").get_text(strip = True)]["Name"] = name
+
+for element in actress:
+    spot = element.find("span", "lister-item-index").get_text(strip = True)
+    top100[element.find("a").get_text(strip = True)]["Ranking"] = spot
+
+for element in actress:
+    movie = element.find("p", "text-muted").find("a").get_text(strip = True)
+    top100[element.find("a").get_text(strip = True)]["Movie"] = movie
+
+for element in actress:
+    movie = element.find("p", "text-muted").find("a").get_text(strip = True)
+    top100[element.find("a").get_text(strip = True)]["Movie"] = movie
+
+'''
+for item in top100.keys():
+    print("Ranking:\t" + top100[item]["Ranking"] + "\nName:\t" + top100[item]["Name"] + "\nMovie:\t\t" + top100[item]["Movie"] + "\n")
+    '''
