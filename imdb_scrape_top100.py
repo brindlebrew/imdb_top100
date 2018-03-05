@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
+import json
+import csv
 
 r = requests.get('http://www.imdb.com/search/name?gender=male,female&ref_=nv_cel_m_3')
 soup = BeautifulSoup(r.text, 'lxml')
@@ -33,5 +35,17 @@ for element in actress:
     movie = element.find("p", "text-muted").find("a").get_text(strip = True)
     top100[element.find("a").get_text(strip = True)]["Movie"] = movie
 
+'''
+# Used for writting the output to screen for testing
 for item in top100.keys():
     print("Ranking:\t" + top100[item]["Ranking"] + "\nName:\t\t" + top100[item]["Name"] + "\nGender:\t\t" + top100[item]["Gender"] + "\nMovie:\t\t" + top100[item]["Movie"] + "\n")
+'''
+
+with open("imdb_status.csv", "w") as toWrite:
+    writer = csv.writer(toWrite, delimiter=",")
+    writer.writerow(["drop", "name", "ranking", "gender", "movie"])
+    for a in top100.keys():
+        writer.writerow([a.encode("utf-8"), top100[a]["Name"], top100[a]["Ranking"], top100[a]["Gender"], top100[a]["Movie"]])
+
+with open("imdb_status.json", "w") as writeJSON:
+    json.dump(top100, writeJSON)
