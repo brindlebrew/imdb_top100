@@ -4,10 +4,9 @@ Scrapes the top 100 stars from IMDB
 
 The goal is to scrape the top 100 starts from IMDB and have it output to a CSV or JSON file.
 
-As of now it is setup with the top 50 stars and no output oustide of printing it to the screen.
-
-Goal is to have the following columns of data:
-Author
+The data is output as follows:
+Drop ("Also the same as the Celeb")
+Celeb
 Current Ranking
 Gender
 Movie
