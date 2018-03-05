@@ -8,9 +8,10 @@ actress = soup.find_all("div", class_="lister-item-content")
 # print(actress[0])
 
 # Used to test the actual text being derived for a field
-print(actress[0].find("p", "text-muted").get_text(strip = True))
-print(actress[0].find("p", "text-muted").string())
+#print(actress[0].find("p", "text-muted").get_text(strip = True).split(sep, 1)[0])
 
+# Sets up the seperator for the actor / actress step.
+sep = "|"
 
 top100 = {}
 for element in actress:
@@ -25,14 +26,12 @@ for element in actress:
     top100[element.find("a").get_text(strip = True)]["Ranking"] = spot
 
 for element in actress:
-    movie = element.find("p", "text-muted").find("a").get_text(strip = True)
-    top100[element.find("a").get_text(strip = True)]["Movie"] = movie
+    gender = element.find("p", "text-muted").get_text(strip = True).split(sep, 1)[0]
+    top100[element.find("a").get_text(strip = True)]["Gender"] = gender
 
 for element in actress:
     movie = element.find("p", "text-muted").find("a").get_text(strip = True)
     top100[element.find("a").get_text(strip = True)]["Movie"] = movie
 
-'''
 for item in top100.keys():
-    print("Ranking:\t" + top100[item]["Ranking"] + "\nName:\t" + top100[item]["Name"] + "\nMovie:\t\t" + top100[item]["Movie"] + "\n")
-    '''
+    print("Ranking:\t" + top100[item]["Ranking"] + "\nName:\t\t" + top100[item]["Name"] + "\nGender:\t\t" + top100[item]["Gender"] + "\nMovie:\t\t" + top100[item]["Movie"] + "\n")
